@@ -19,6 +19,9 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
+
+        <!-- skip test config -->
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <dependencies>
@@ -74,7 +77,7 @@
 
     <build>
         <plugins>
-            <!-- 跳过测试：不编译、不执行；默认注释态，开发者可按需使用 -->
+            <!-- 编译：指定java版本 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -82,15 +85,6 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <skip>true</skip>
                 </configuration>
             </plugin>
 

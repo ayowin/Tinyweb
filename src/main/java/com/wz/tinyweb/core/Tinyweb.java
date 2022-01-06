@@ -7,7 +7,6 @@ import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 import org.yaml.snakeyaml.Yaml;
 
-import javax.servlet.http.HttpServlet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
