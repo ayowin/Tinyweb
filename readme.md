@@ -23,4 +23,5 @@
 
 
 ## 3. 使用文档
+* 使用方法参考IndexController的实现结合application.yml的配置
 
