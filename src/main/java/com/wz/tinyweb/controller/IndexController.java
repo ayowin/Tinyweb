@@ -7,10 +7,15 @@ import javax.servlet.http.HttpServletRequest;
 public class IndexController {
 
     public String index(HttpServletRequest request){
-        return "index";
+        return request.toString();
     }
 
-    public String test(JSONObject request){
-        return "test";
+    public String string(String request){
+        return request;
     }
+
+    public String json(JSONObject request){
+        return request.toJSONString();
+    }
+
 }
