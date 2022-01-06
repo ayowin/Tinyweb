@@ -14,7 +14,7 @@ import java.util.jar.JarFile;
 
 public class ClassUtil {
 
-    public static Set<Class<?>> getClasses(String packageName) throws Exception {
+    public static Set<Class<?>> getClasses(String packageName) {
         Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
         boolean recursive = true;
         String packageDirName = packageName.replace('.', '/');

@@ -1,5 +1,6 @@
 package com.wz.tinyweb.core;
 
+import com.wz.tinyweb.Application;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
@@ -11,8 +12,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class Tinyweb {
 
@@ -109,6 +113,27 @@ public class Tinyweb {
                 api.classname = classname;
                 api.function = function;
                 dispatcherServlet.getApiList().add(api);
+            }
+
+            /* scan annotation: RequestMapping */
+            Set<Class<?>> classSet = ClassUtil.getClasses(Application.class.getPackage().getName());
+            for(Class c : classSet){
+                Method[] methods = c.getMethods();
+                for(Method method : methods){
+                    Annotation annotation = method.getAnnotation(RequestMapping.class);
+                    if(annotation != null){
+                        RequestMapping requestMapping = (RequestMapping) annotation;
+                        String path = requestMapping.value();
+                        String classname = c.getName();
+                        String function = method.getName();
+
+                        DispatcherServlet.Api api = new DispatcherServlet.Api();
+                        api.path = path;
+                        api.classname = classname;
+                        api.function = function;
+                        dispatcherServlet.getApiList().add(api);
+                    }
+                }
             }
         } catch (IOException e){
             e.printStackTrace();
