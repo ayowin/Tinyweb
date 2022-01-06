@@ -1,0 +1,13 @@
+
+tinyweb:
+    app-base: webapps
+    encode: UTF-8
+    port: 8080
+    context-path:
+    api:
+        - path: /index
+          class: com.wz.tinyweb.controller.IndexController
+          function: index
+        - path: /test
+          class: com.wz.tinyweb.controller.IndexController
+          function: test
