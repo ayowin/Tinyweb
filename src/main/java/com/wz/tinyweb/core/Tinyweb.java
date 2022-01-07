@@ -129,12 +129,12 @@ public class Tinyweb {
                     annotation = method.getAnnotation(RequestMapping.class);
                     if(annotation != null){
                         requestMapping = (RequestMapping) annotation;
-                        String path = requestMapping.value();
+                        String path = prefix + requestMapping.value();
                         String classname = c.getName();
                         String function = method.getName();
 
                         DispatcherServlet.Api api = new DispatcherServlet.Api();
-                        api.path = prefix + path;
+                        api.path = path;
                         api.classname = classname;
                         api.function = function;
                         dispatcherServlet.getApiList().add(api);
