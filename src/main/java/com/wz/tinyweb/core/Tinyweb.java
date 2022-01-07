@@ -102,17 +102,19 @@ public class Tinyweb {
                 contextPath = contextPathValue;
             }
             List<Object> apiList = (List<Object>)tinywebMap.get("api");
-            for (Object object : apiList){
-                HashMap<String,Object> apiMap = (HashMap<String,Object>)object;
-                String path = contextPath + (String)apiMap.get("path");
-                String classname = (String)apiMap.get("class");
-                String function = (String)apiMap.get("function");
+            if(apiList != null){
+                for (Object object : apiList){
+                    HashMap<String,Object> apiMap = (HashMap<String,Object>)object;
+                    String path = contextPath + (String)apiMap.get("path");
+                    String classname = (String)apiMap.get("class");
+                    String function = (String)apiMap.get("function");
 
-                DispatcherServlet.Api api = new DispatcherServlet.Api();
-                api.path = path;
-                api.classname = classname;
-                api.function = function;
-                dispatcherServlet.getApiList().add(api);
+                    DispatcherServlet.Api api = new DispatcherServlet.Api();
+                    api.path = path;
+                    api.classname = classname;
+                    api.function = function;
+                    dispatcherServlet.getApiList().add(api);
+                }
             }
 
             /* scan annotation: RequestMapping */
