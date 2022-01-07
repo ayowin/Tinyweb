@@ -104,7 +104,7 @@ public class Tinyweb {
             List<Object> apiList = (List<Object>)tinywebMap.get("api");
             for (Object object : apiList){
                 HashMap<String,Object> apiMap = (HashMap<String,Object>)object;
-                String path = (String)apiMap.get("path");
+                String path = contextPath + (String)apiMap.get("path");
                 String classname = (String)apiMap.get("class");
                 String function = (String)apiMap.get("function");
 
@@ -129,7 +129,7 @@ public class Tinyweb {
                     annotation = method.getAnnotation(RequestMapping.class);
                     if(annotation != null){
                         requestMapping = (RequestMapping) annotation;
-                        String path = prefix + requestMapping.value();
+                        String path = contextPath + prefix + requestMapping.value();
                         String classname = c.getName();
                         String function = method.getName();
 
