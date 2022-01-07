@@ -5,6 +5,7 @@ import com.wz.tinyweb.core.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
+@RequestMapping("/index")
 public class IndexController {
 
     public String index(HttpServletRequest request){

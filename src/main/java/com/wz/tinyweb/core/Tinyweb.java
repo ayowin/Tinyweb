@@ -118,17 +118,23 @@ public class Tinyweb {
             /* scan annotation: RequestMapping */
             Set<Class<?>> classSet = ClassUtil.getClasses(Application.class.getPackage().getName());
             for(Class c : classSet){
+                String prefix = "";
+                Annotation annotation = c.getAnnotation(RequestMapping.class);
+                RequestMapping requestMapping = (RequestMapping) annotation;
+                if(annotation != null){
+                    prefix = requestMapping.value();
+                }
                 Method[] methods = c.getMethods();
                 for(Method method : methods){
-                    Annotation annotation = method.getAnnotation(RequestMapping.class);
+                    annotation = method.getAnnotation(RequestMapping.class);
                     if(annotation != null){
-                        RequestMapping requestMapping = (RequestMapping) annotation;
+                        requestMapping = (RequestMapping) annotation;
                         String path = requestMapping.value();
                         String classname = c.getName();
                         String function = method.getName();
 
                         DispatcherServlet.Api api = new DispatcherServlet.Api();
-                        api.path = path;
+                        api.path = prefix + path;
                         api.classname = classname;
                         api.function = function;
                         dispatcherServlet.getApiList().add(api);
