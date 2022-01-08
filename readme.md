@@ -79,7 +79,7 @@ tinyweb:
 * tinyweb: 根节点
 * app-base: 根目录名称，第一次运行服务会自动建立该目录
 * encode: 字符集编码
-* context-path: 上下文路径，默认值为ROOT，配置后，所有请求url需加上该前缀，如：context-path为/example时，所有的请求url为 http://localhost:8080/example/*
+* context-path: 上下文路径，默认值为ROOT，配置后，所有请求url需加上该前缀，如：context-path为/example时，所有的请求url为 http://localhost:8080/example/* 
 * api: 接口配置，类型为数组，每个元素有path、class、function属性，按需配置。
     * path: 请求url
     * class：实现该接口的全类名
@@ -96,7 +96,7 @@ public class IndexController {
     }
 }
 ```
-表示http://localhost/index/annotation请求由IndexController中的annotation函数处理。
+表示 http://localhost/index/annotation 请求由IndexController中的annotation函数处理。
 
 ### 3.3 接口函数要求
 接口函数有3个要求，取IndexConroller.java的代码如下：
