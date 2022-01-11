@@ -40,8 +40,12 @@ public class DispatcherServlet extends HttpServlet {
                 if(requestURI.equals(api.path)){
                     /* get clazz by classname */
                     Class<?> clazz = Class.forName(api.classname);
-                    /* instance */
-                    Object object = clazz.newInstance();
+
+                    /* get object from inject container */
+                    String key = clazz.getSimpleName();
+                    key = (new StringBuilder()).append(Character.toLowerCase(key.charAt(0))).append(key.substring(1)).toString();
+                    Object object = InjectContainer.get(key);
+
                     /* get methods */
                     Method[] methods = clazz.getMethods();
                     for(Method method : methods){
@@ -110,7 +114,6 @@ public class DispatcherServlet extends HttpServlet {
 
             super.doGet(request,response);
         } catch (ClassNotFoundException |
-                InstantiationException |
                 IllegalAccessException |
                 InvocationTargetException |
                 IllegalArgumentException e){

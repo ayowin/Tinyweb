@@ -59,6 +59,12 @@ public class Tinyweb {
             wrapper.addMapping("/*");
             wrapper.setLoadOnStartup(1);
 
+            /**
+             * integrate injection and enable it:
+             *      scan @Inject,@Autowired annotations
+             **/
+            Injection.scanAnnotation(Application.class.getPackage().getName());
+
             tomcat.start();
             tomcat.getServer().await();
         } catch (LifecycleException e) {
