@@ -53,7 +53,6 @@ public class IndexController {
     public String annotation(HttpServletRequest request){
         return request.toString();
     }
-
 }
 ```
 
@@ -118,3 +117,75 @@ public class IndexController {
 1. 返回值为String，请求参数为HttpServletRequest
 2. 返回值为String，请求参数为String
 3. 返回值为String，请求参数为JSONObject，其中JSONObject使用的是阿里fastjson库。
+
+### 3.4 依赖注入的使用（v1.2.0版本以后整合了依赖注入的实现）
+> 小编在另一个单独工程中设计了“依赖注入”框架的实现，仅感兴趣依赖注入的实现，可移步：[https://github.com/ayowin/Injection](https://github.com/ayowin/Injection)  
+
+**依赖注入的使用示例：**    
+* 请关注以下相关代码中的 **@Inject** 和 **@Autowired** 的使用。  
+
+**IndexController.java的相关代码如下：**
+```java
+@RequestMapping("/index")
+@Inject
+public class IndexController {
+
+    @Autowired
+    IndexService indexService;
+
+    @RequestMapping("/select")
+    public String select(HttpServletRequest request){
+        return indexService.select();
+    }
+}
+```
+**IndexService.java的相关代码如下：**
+```java
+public interface IndexService {
+    String select();
+}
+```
+**IndexServiceImpl.java的相关代码如下：**
+```java
+@Inject
+public class IndexServiceImpl implements IndexService {
+
+    @Autowired
+    IndexMapper indexMapper;
+
+    @Override
+    public String select() {
+        return indexMapper.select();
+    }
+}
+```
+**IndexMapper.java的相关代码如下：**
+```java
+@Inject
+public class IndexMapper {
+
+    private static class Index{
+        private int id;
+        private String content;
+
+        public Index(int id,String content){
+            this.id = id;
+            this.content = content;
+        }
+
+        @Override
+        public String toString() {
+            return "Index{" +
+                    "id=" + id +
+                    ", content='" + content + '\'' +
+                    '}';
+        }
+    }
+
+    public String select(){
+        Index index = new Index(1,"select api test");
+        return index.toString();
+    }
+
+}
+```
