@@ -122,7 +122,7 @@ public class IndexController {
 > 小编在另一个单独工程中设计了“依赖注入”框架的实现，仅感兴趣依赖注入的实现，可移步：[https://github.com/ayowin/Injection](https://github.com/ayowin/Injection)  
 
 **依赖注入的使用示例：**    
-* 请关注以下相关代码中的 ***@Configuration** 、 **@Inject** 、 **@Autowired** 的使用。  
+* 请关注以下相关代码中的 **@Configuration** 、 **@Inject** 、 **@Autowired** 的使用。  
 
 **TestConfig.java的相关代码如下：**
 ```java
