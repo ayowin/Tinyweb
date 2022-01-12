@@ -1,6 +1,9 @@
 package com.wz.tinyweb.core;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 public class Injection {
@@ -12,13 +15,91 @@ public class Injection {
     }
 
     public static void scanAnnotation(String packageName){
-        Set<Class<?>> classSet = ClassUtil.getClasses(packageName);
-        if(classSet != null){
-            parseAnnotation(classSet);
+        parseConfiguration(ClassUtil.getClasses(packageName));
+        parseOthers(ClassUtil.getClasses(packageName));
+    }
+
+    private static void parseConfiguration(Set<Class<?>> classSet){
+        if(classSet == null){
+            return;
+        }
+
+        Iterator<Class<?>> classIterator = classSet.iterator();
+        while (classIterator.hasNext()){
+            Class<?> c = classIterator.next();
+            try {
+                Configuration configuration = c.getAnnotation(Configuration.class);
+                if(configuration != null){
+                    String key = firstWordToLowerCase(c.getSimpleName());
+                    Object object = InjectContainer.get(key);
+                    if(object == null){
+                        object = c.newInstance();
+                        InjectContainer.add(key,object);
+                    }
+                    Method[] methods = c.getMethods();
+                    if(methods != null){
+                        boolean allMethodInjected = true;
+
+                        for(Method method : methods){
+                            Inject inject = method.getAnnotation(Inject.class);
+                            if(inject != null){
+                                String methodObjectKey = firstWordToLowerCase(method.getName());
+                                Object methodObject = InjectContainer.get(methodObjectKey);
+                                if(methodObject == null){
+                                    Parameter[] parameters = method.getParameters();
+                                    if(parameters != null && parameters.length > 0){
+                                        boolean allParametersInjected = true;
+                                        Object[] parameterObjects = new Object[parameters.length];
+
+                                        for(int i=0;i<parameters.length;i++){
+                                            String parameterKey = firstWordToLowerCase(parameters[i].getName());
+                                            parameterObjects[i] = InjectContainer.get(parameterKey);
+                                            if(parameterObjects[i] == null){
+                                                allParametersInjected = false;
+                                                allMethodInjected = false;
+                                            }
+                                        }
+
+                                        if(allParametersInjected){
+                                            methodObject = method.invoke(object,parameterObjects);
+                                            if(methodObject != null){
+                                                InjectContainer.add(methodObjectKey,methodObject);
+                                            }
+                                        }
+                                    } else {
+                                        methodObject = method.invoke(object,null);
+                                        if(methodObject != null){
+                                            InjectContainer.add(methodObjectKey,methodObject);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if(allMethodInjected){
+                            classIterator.remove();
+                        }
+                    }
+                } else {
+                    classIterator.remove();
+                }
+            } catch (IllegalAccessException |
+                    InstantiationException |
+                    InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(classSet != null && classSet.size() > 0){
+            parseConfiguration(classSet);
         }
     }
 
-    private static void parseAnnotation(Set<Class<?>> classSet){
+    private static void parseOthers(Set<Class<?>> classSet){
+        if(classSet == null){
+            return;
+        }
+
         Set<Class<?>> notPassClassSet = new HashSet<>();
 
         /* remove classes from classSet that do not meet the instantiation requirements */
@@ -36,7 +117,7 @@ public class Injection {
                             if(autowired.value().trim().equals("")){
                                 key = firstWordToLowerCase(field.getName());
                             } else {
-                                key = autowired.value();
+                                key = autowired.value().trim();
                             }
                             Object object = InjectContainer.get(key);
                             if(object == null){
@@ -67,7 +148,7 @@ public class Injection {
                             key = firstWordToLowerCase(c.getSimpleName());
                         }
                     } else {
-                        key = inject.value();
+                        key = inject.value().trim();
                     }
                     Field[] fields = c.getDeclaredFields();
                     if(fields != null){
@@ -78,7 +159,7 @@ public class Injection {
                                 if(autowired.value().trim().equals("")){
                                     fieldKey = firstWordToLowerCase(field.getName());
                                 } else {
-                                    fieldKey = autowired.value();
+                                    fieldKey = autowired.value().trim();
                                 }
                                 Object fieldObject = InjectContainer.get(fieldKey);
                                 field.setAccessible(true);
@@ -102,7 +183,7 @@ public class Injection {
 
         /* recursion for instantiate other classes */
         if(notPassClassSet != null && notPassClassSet.size() > 0){
-            parseAnnotation(notPassClassSet);
+            parseOthers(notPassClassSet);
         }
     }
 

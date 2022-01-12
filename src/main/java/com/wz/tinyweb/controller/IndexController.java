@@ -36,4 +36,5 @@ public class IndexController {
     public String select(HttpServletRequest request){
         return indexService.select();
     }
+
 }

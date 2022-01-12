@@ -15,4 +15,5 @@ public class IndexServiceImpl implements IndexService {
     public String select() {
         return indexMapper.select();
     }
+
 }

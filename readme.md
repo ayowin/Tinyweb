@@ -122,14 +122,31 @@ public class IndexController {
 > 小编在另一个单独工程中设计了“依赖注入”框架的实现，仅感兴趣依赖注入的实现，可移步：[https://github.com/ayowin/Injection](https://github.com/ayowin/Injection)  
 
 **依赖注入的使用示例：**    
-* 请关注以下相关代码中的 **@Inject** 和 **@Autowired** 的使用。  
+* 请关注以下相关代码中的 ***@Configuration** 、 **@Inject** 、 **@Autowired** 的使用。  
+
+**TestConfig.java的相关代码如下：**
+```java
+@Configuration
+public class TestConfig {
+    @Inject
+    public DataSource dataSource(){
+        DataSource dataSource = new DataSource();
+        return dataSource;
+    }
+
+    @Inject
+    public Connection connection(DataSource dataSource){
+        Connection connection = new Connection(dataSource);
+        return connection;
+    }
+}
+```
 
 **IndexController.java的相关代码如下：**
 ```java
 @RequestMapping("/index")
 @Inject
 public class IndexController {
-
     @Autowired
     IndexService indexService;
 
@@ -149,7 +166,6 @@ public interface IndexService {
 ```java
 @Inject
 public class IndexServiceImpl implements IndexService {
-
     @Autowired
     IndexMapper indexMapper;
 
@@ -163,7 +179,6 @@ public class IndexServiceImpl implements IndexService {
 ```java
 @Inject
 public class IndexMapper {
-
     private static class Index{
         private int id;
         private String content;
@@ -186,6 +201,5 @@ public class IndexMapper {
         Index index = new Index(1,"select api test");
         return index.toString();
     }
-
 }
 ```
