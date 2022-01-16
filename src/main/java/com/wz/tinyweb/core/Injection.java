@@ -33,7 +33,9 @@ public class Injection {
 
         ArrayList<String> keyList = new ArrayList<>();
 
-        for(Class<?> c : classSet){
+        Iterator<Class<?>> classIterator = classSet.iterator();
+        while (classIterator.hasNext()){
+            Class<?> c = classIterator.next();
             try {
                 /* parse class @Configuration */
                 Configuration configuration = c.getAnnotation(Configuration.class);
@@ -155,6 +157,10 @@ public class Injection {
                             }
                         }
                     }
+                }
+
+                if(configuration == null && inject == null){
+                    classIterator.remove();
                 }
             } catch (IllegalAccessException |
                     InstantiationException |
