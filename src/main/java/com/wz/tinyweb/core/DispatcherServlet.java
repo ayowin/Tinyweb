@@ -65,6 +65,7 @@ public class DispatcherServlet extends HttpServlet {
                                         method.setAccessible(true);
                                         String responseContent = (String) method.invoke(object, request);
 
+                                        response.addHeader("Access-Control-Allow-Origin","*");
                                         response.setCharacterEncoding("UTF-8");
                                         Writer writer = response.getWriter();
                                         writer.write(responseContent);
@@ -77,6 +78,7 @@ public class DispatcherServlet extends HttpServlet {
                                         method.setAccessible(true);
                                         String responseContent = (String) method.invoke(object, requestContent);
 
+                                        response.addHeader("Access-Control-Allow-Origin","*");
                                         response.setCharacterEncoding("UTF-8");
                                         Writer writer = response.getWriter();
                                         writer.write(responseContent);
@@ -92,6 +94,7 @@ public class DispatcherServlet extends HttpServlet {
                                             method.setAccessible(true);
                                             String responseContent = (String) method.invoke(object, requestObject);
 
+                                            response.addHeader("Access-Control-Allow-Origin","*");
                                             response.setCharacterEncoding("UTF-8");
                                             Writer writer = response.getWriter();
                                             writer.write(responseContent);
